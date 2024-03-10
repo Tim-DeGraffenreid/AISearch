@@ -35,7 +35,7 @@ public class Graph {
     }
     
     private double heuristic(Node a, Node b) {
-        // Simplified for example; replace with actual heuristic function
+       
         double dLat = Math.toRadians(b.getLatitude() - a.getLatitude());
         double dLon = Math.toRadians(b.getLongitude() - a.getLongitude());
         double lat1 = Math.toRadians(a.getLatitude());

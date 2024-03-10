@@ -28,58 +28,44 @@ public class BestFirstSearch {
 		this.allNodes = graph.getNodesMap();
 	}
 
-	public void search() {
-		Node start = graph.getNode(startNode);
-		open.add(start);
-		cameFrom.put(startNode, null);
-		costSoFar.put(startNode, 0.0);
+    public void search() {
+        Node start = allNodes.get(startNode);
+        open.add(start);
+        cameFrom.put(startNode, null);
 
-		long startTime = System.currentTimeMillis();
-		long timeOut = 10000;
+        long startTime = System.currentTimeMillis();
+        long timeOut = 10000;
 
-		while (!open.isEmpty()) {
+        while (!open.isEmpty()) {
 
-			if (System.currentTimeMillis() - startTime > timeOut) {
-				System.out.println("Search timed out.");
-				return;
-			}
-			// Sort states on OPEN by heuristic value before discarding the leftmost state
-			open.sort(Comparator.comparingDouble(node -> heuristic(node, graph.getNode(goalNode))));
-			Node current = open.remove(0); // Discard leftmost state from OPEN, set it to X
+            if (System.currentTimeMillis() - startTime > timeOut) {
+                System.out.println("Search timed out.");
+                return;
+            }
 
-			if (current.getName().equals(goalNode)) {
-				System.out.printf("Goal node found in %d ms\n", System.currentTimeMillis() - startTime);
-				reconstructPath(current.getName());
-				return; // Success
-			}
+            open.sort(Comparator.comparingDouble(node -> heuristic(node, allNodes.get(goalNode))));
+            Node current = open.remove(0);
 
-			// Produce children of X
-			for (Edge edge : graph.getEdges(current.getName())) {
-				Node child = edge.getTo();
-				double newCost = costSoFar.get(current.getName()) + edge.getCost();
+            if (current.getName().equals(goalNode)) {
+                System.out.printf("Goal node found in %d ms\n", System.currentTimeMillis() - startTime);
+                reconstructPath(current.getName());
+                return;
+            }
 
-				// If child not on OPEN or CLOSED
-				if (!open.contains(child) && !closed.contains(child)) {
-					costSoFar.put(child.getName(), newCost);
-					open.add(child); // insert the child on OPEN
-					cameFrom.put(child.getName(), current.getName());
-				} else if (open.contains(child) && newCost < costSoFar.get(child.getName())) {
-					// If child is already on OPEN and NewPathOfchild < OldPathOfchild
-					costSoFar.put(child.getName(), newCost); // update the path
-					cameFrom.put(child.getName(), current.getName());
-				} else if (closed.contains(child) && newCost < costSoFar.get(child.getName())) {
-					// If child is already on CLOSED and newPathOfchild < OldPathOfchild
-					closed.remove(child); // discard the state from CLOSED
-					open.add(child); // insert the child to OPEN
-					cameFrom.put(child.getName(), current.getName());
-				}
-			}
+            for (Edge edge : graph.getEdges(current.getName())) {
+                Node child = edge.getTo();
+                
+                if (!closed.contains(child) && !open.contains(child)) {
+                    open.add(child);
+                    cameFrom.put(child.getName(), current.getName());
+                }
+            }
 
-			closed.add(current); // Put X on CLOSED
-		}
+            closed.add(current);
+        }
 
-		System.out.println("Goal node not found."); // Fail
-	}
+        System.out.println("Goal node not found.");
+    }
 
 	private void reconstructPath(String current) {
 		LinkedList<String> formattedPath = new LinkedList<>();

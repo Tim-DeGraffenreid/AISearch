@@ -52,7 +52,7 @@ public class AStarSearch {
             closed.add(current);
             for (Edge edge : graph.getEdges(current.getName())) {
                 Node successor = edge.getTo();
-                Node goal = allNodes.get(goalNode);
+                
                 double successorCurrentCost = costSoFar.get(current.getName()) + edge.getCost();
                 //System.out.printf("From %s to %s is %.2f for a total of %.2f, then to goal %.2f\n", current.getName(), successor.getName(), edge.getCost(), successorCurrentCost, heuristic(successor, goal));
                 if (!costSoFar.containsKey(successor.getName()) || successorCurrentCost < costSoFar.get(successor.getName())) {
