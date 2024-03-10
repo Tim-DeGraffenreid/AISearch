@@ -1,0 +1,45 @@
+Best_First_Search (Root_Node, goal)
+{
+	OPEN = [Root_Node]
+	CLOSED = []
+	
+		while(OPEN != [])
+		{
+			discard leftmost state from OPEN, set it to X
+			
+			if (X = goal return path from Root_Node to X	//Success
+			else{
+				produce children of X
+				while(X has child nodes)
+				{
+				
+				if (child not on OPEN or CLOSED)
+				{
+					the child is designated a heuristic value
+					insert the child on OPEN 
+				}
+				
+				if (child is already on OPEN)
+				{
+					if(NewPathOfchild < OldPathOfchild)
+						the NewPathOfchild is given to the state on OPEN
+				}
+				
+				if (child is already on CLOSED)
+				{
+					if (newPathOfchild < OldPathOfchild)
+					{
+						discard the state from CLOSED
+						insert the child to OPEN
+					}
+				}
+				
+				}//end while (X has child nodes)
+			
+			put X on CLOSED
+			sort states on OPEN by heuristic value
+			
+			} //end while (OPEN != [])
+		
+		return FAIL
+}
